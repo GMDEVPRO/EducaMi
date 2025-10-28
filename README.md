@@ -40,56 +40,60 @@ classDiagram
 ## 🧱 Class Diagram — EduCloud MVP
 
 ```mermaid
+
 classDiagram
+    %% ==========================
+    %% ENTITIES ESSENCIAIS
+    %% ==========================
+    class UserAccount {
+        +Long id
+        +String fullName
+        +String email
+        +String password
+        +String role
+    }
 
-class Student {
-  +Long id
-  +String firstName
-  +String lastName
-  +String email
-  +LocalDate birthDate
-  +List~Course~ courses
-  +List~Diploma~ diplomas
-}
+    class Student {
+        +Long id
+        +String registrationNumber
+        +String firstName
+        +String lastName
+        +LocalDate birthDate
+        +UserAccount userAccount
+    }
 
-class Teacher {
-  +Long id
-  +String name
-  +String email
-  +String specialization
-  +List~Course~ courses
-}
+    class Teacher {
+        +Long id
+        +String firstName
+        +String lastName
+        +String specialization
+        +UserAccount userAccount
+    }
 
-class Course {
-  +Long id
-  +String code
-  +String title
-  +Integer credits
-  +Teacher teacher
-  +List~Student~ students
-}
+    class Course {
+        +Long id
+        +String code
+        +String title
+        +Integer credits
+        +Teacher teacher
+    }
 
-class Diploma {
-  +Long id
-  +String diplomaCode
-  +LocalDate issueDate
-  +String fileUrl
-  +Student student
-  +Course course
-}
+    class Diploma {
+        +Long id
+        +String diplomaNumber
+        +String title
+        +LocalDate issueDate
+        +Student student
+        +Course course
+    }
 
-class UserAccount {
-  +Long id
-  +String username
-  +String password
-  +String role
-}
-
-Student "1" --> "*" Course : enrolled in
-Course "1" --> "1" Teacher : taught by
-Student "1" --> "*" Diploma : receives
-Diploma "*" --> "1" Course : for
-UserAccount "1" --> "1" Student : profile (if student)
-UserAccount "1" --> "1" Teacher : profile (if teacher)
+    %% ==========================
+    %% RELAÇÕES
+    %% ==========================
+    UserAccount <|-- Student
+    UserAccount <|-- Teacher
+    Teacher "1" --> "0..*" Course
+    Student "1" --> "0..*" Diploma
+    Course "1" --> "0..*" Diploma
 
 
