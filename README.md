@@ -39,61 +39,53 @@ classDiagram
 
 ## 🧱 Class Diagram — EduCloud MVP
 
+
+
+# Arquitetura do SaaS Educacional
+
+Este diagrama mostra a arquitetura completa do SaaS educacional, incluindo frontend, microservices, bancos de dados e mensageria.
+
+
 ```mermaid
 
-classDiagram
+flowchart TD
     %% ==========================
-    %% ENTITIES ESSENCIAIS
+    %% FRONTEND
     %% ==========================
-    class UserAccount {
-        +Long id
-        +String fullName
-        +String email
-        +String password
-        +String role
-    }
-
-    class Student {
-        +Long id
-        +String registrationNumber
-        +String firstName
-        +String lastName
-        +LocalDate birthDate
-        +UserAccount userAccount
-    }
-
-    class Teacher {
-        +Long id
-        +String firstName
-        +String lastName
-        +String specialization
-        +UserAccount userAccount
-    }
-
-    class Course {
-        +Long id
-        +String code
-        +String title
-        +Integer credits
-        +Teacher teacher
-    }
-
-    class Diploma {
-        +Long id
-        +String diplomaNumber
-        +String title
-        +LocalDate issueDate
-        +Student student
-        +Course course
-    }
+    A[Frontend React SPA] --> B[API Gateway]
 
     %% ==========================
-    %% RELAÇÕES
+    %% GATEWAY PARA MICROSERVICES
     %% ==========================
-    UserAccount <|-- Student
-    UserAccount <|-- Teacher
-    Teacher "1" --> "0..*" Course
-    Student "1" --> "0..*" Diploma
-    Course "1" --> "0..*" Diploma
+    B --> C[Identity Service]
+    B --> D[Academic Service]
+    B --> E[Payment Service]
+    B --> F[Library Service]
+    B --> G[Messaging Service]
+    B --> H[Exam Service]
+    B --> I[Diploma Service]
+    B --> J[Enrollment Service]
 
+    %% ==========================
+    %% MICROSERVICES PARA SEUS BANCOS POSTGRESQL
+    %% ==========================
+    C --> CDB[(PostgreSQL: identitydb)]
+    D --> DDB[(PostgreSQL: academicdb)]
+    E --> EDB[(PostgreSQL: paymentdb)]
+    F --> FDB[(PostgreSQL: librarydb)]
+    G --> GDB[(PostgreSQL: messagingdb)]
+    H --> HDB[(PostgreSQL: examdb)]
+    I --> IDB[(PostgreSQL: diplomadb)]
+    J --> JDB[(PostgreSQL: enrollmentdb)]
 
+    %% ==========================
+    %% MENSAGERIA (RabbitMQ / SQS / SNS)
+    %% ==========================
+    C --> MQ[Notification / Queue]
+    D --> MQ
+    E --> MQ
+    F --> MQ
+    G --> MQ
+    H --> MQ
+    I --> MQ
+    J --> MQ
